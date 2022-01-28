@@ -16,6 +16,7 @@ const app = createApp({
             api_path: 'karen666',
             newProduct: false,
             allProductsData: [],
+            tempImgUrl: '',
             tempProduct: {
                 imagesUrl: [],
             }
@@ -127,9 +128,28 @@ const app = createApp({
             })
         },
 
-        uploadNewImg(){
-            this.tempProduct.imagesUrl = [];
-            this.tempProduct.imagesUrl.push('');
+        // uploadNewImg(){
+        //     this.tempProduct.imagesUrl = [];
+        //     this.tempProduct.imagesUrl.push('');
+        // }
+        addNewImg(){
+
+            if(this.tempImgUrl === ""){
+                return
+            }
+
+             // 為什麼沒有加入這一行就不會動？ this.tempProduct.imagesUrl = [];
+            if(this.tempProduct.imagesUrl === undefined){
+                this.tempProduct.imagesUrl = [];
+            }
+
+            this.tempProduct.imagesUrl.push(this.tempImgUrl);
+            this.tempImgUrl = '';
+            
+        },
+
+        deleteImg(){
+            this.tempProduct.imagesUrl.pop();
         }
 
 
