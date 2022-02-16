@@ -7,6 +7,10 @@ import pagination from './pagination.js'
 let productModal = null;
 let deleteProductModal = null;
 
+// api 相關資訊
+let url = 'https://vue3-course-api.hexschool.io/v2';
+let api_path = 'karen666';
+
 // 根元件
 const app = createApp({
 
@@ -17,10 +21,6 @@ const app = createApp({
 
     data() {
         return {
-
-            // api path
-            url: 'https://vue3-course-api.hexschool.io/v2',
-            api_path: 'karen666',
 
             // 商品資料
             productData: [],
@@ -44,7 +44,7 @@ const app = createApp({
         axios.defaults.headers.common['Authorization'] = saveToken;
 
         // 驗證身份
-        const api_url = `${this.url}/api/user/check`;
+        const api_url = `${url}/api/user/check`;
         axios.post(api_url)
         .then(res => {
             console.log(res.data);
@@ -58,7 +58,7 @@ const app = createApp({
         // 取得產品資料 get API
                     // 參數預設值 (避免出現 undefined)
         getProductData(page = 1){
-            axios.get(`${this.url}/api/${this.api_path}/admin/products?page=${page}`)
+            axios.get(`${url}/api/${api_path}/admin/products?page=${page}`)
             .then(res => {
                 console.log(res.data.pagination);
                 this.productData = res.data.products;
@@ -102,7 +102,7 @@ const app = createApp({
 
         // 刪除商品
         deleteProduct(){
-            axios.delete(`${this.url}/api/${this.api_path}/admin/product/${this.tempProduct.id}`)
+            axios.delete(`${url}/api/${api_path}/admin/product/${this.tempProduct.id}`)
             .then(res => {
                 console.log(res.data);
                 deleteProductModal.hide();
@@ -131,30 +131,32 @@ const app = createApp({
     
 });
 
-// 全域元件
+// 全域元件 
 app.component('productModalComponent', {
     props: ['tempProduct'],
-    template: 'templateForProductModal',
+    template: '#templateForProductModal',
     methods: {
         // 新增及編輯產品 API
         updateProduct(){
 
             if(!this.isNew){
-                axios.put(`${this.url}/api/${this.api_path}/admin/product/${this.tempProduct.id}`, {data: this.tempProduct})
+                axios.put(`${url}/api/${api_path}/admin/product/${this.tempProduct.id}`, {data: this.tempProduct})
                 .then(res => {
                     console.log(res.data);
                     productModal.hide();
-                    this.getProductData();
+                    // this.getProductData();
+                    this.$emit('get-product-data');
                 })
                 .catch(err => {
                     console.dir(err);
                 })
             }else{
-                axios.post(`${this.url}/api/${this.api_path}/admin/product`, {data: this.tempProduct})
+                axios.post(`${url}/api/${api_path}/admin/product`, {data: this.tempProduct})
             .then(res => {
                 console.log(res.data);
                 productModal.hide();
-                this.getProductData();
+                // this.getProductData();
+                this.$emit('get-product-data');
             })
             .catch(err => {
                 console.dir(err);

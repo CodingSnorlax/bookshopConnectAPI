@@ -69,14 +69,15 @@
             </table>
 
             <!-- 內 pages, 外 pagination -->
-            <pagination :pages="pagination" @get-product="getProductData"></pagination>
+            <pagination :pages="pagination"></pagination>
 
         </div>
 
-
+        <!-- ***** -->
         <!-- 編輯、新增產品 Modal -->
         <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-            <product-modal-component :temp-product="tempProduct"></product-modal-component>
+                            <!-- tempProd 把外層資料接進來用(props) -->
+            <product-modal-component :temp-product="tempProduct" @get-product-data="getProductData"></product-modal-component>
         </div>
 
         <!-- 刪除產品 modal -->
