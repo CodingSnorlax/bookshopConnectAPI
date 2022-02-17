@@ -69,49 +69,31 @@
             </table>
 
             <!-- 內 pages, 外 pagination -->
-            <pagination :pages="pagination"></pagination>
+            <pagination :pages="pagination" @get-product="getProductData"></pagination>
 
         </div>
 
-        <!-- ***** -->
         <!-- 編輯、新增產品 Modal -->
         <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                            <!-- tempProd 把外層資料接進來用(props) -->
-            <product-modal-component :temp-product="tempProduct" @get-product-data="getProductData"></product-modal-component>
+            
+                            <!-- tempProd 把外層資料接進來用(props)，少了這個會報錯(讀不到imgUrl) -->
+            <product-modal-component :temp-product="tempProduct" :is-new="isNew" @get-product-data="getProductData"></product-modal-component>
+        
         </div>
 
         <!-- 刪除產品 modal -->
         <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
             aria-labelledby="delProductModalLabel" aria-hidden="true">
-            <!-- 這邊帶入 v-for?? -->
-            <div class="modal-dialog">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 id="delProductModalLabel" class="modal-title">
-                            <span>刪除產品</span>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        是否刪除
-                        <strong class="text-danger">{{tempProduct.title}}</strong> 商品(刪除後將無法恢復)。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-danger" @click="deleteProduct">
-                            確認刪除
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
+            <delete-product-modal-component :temp-product="tempProduct" @get-product-data="getProductData"></delete-product-modal-component>
+
         </div>
         <!-- Modal -->
     </div>
 
     <!-- 範圍在 app 之外 -->
     <!-- 要轉 text/x-template  -->
+    <!-- 新增及編輯產品 modal 元件 -->
     <script type="text/x-template" id="templateForProductModal">
         <div class="modal-dialog modal-xl" >
                 <div class="modal-content border-0">
@@ -207,12 +189,43 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             取消
                         </button>
+                        <!-- 這個 btn 是屬於新增產品、編輯產品共用的按鈕 -->
                         <button type="button" class="btn btn-primary" @click="updateProduct">
                             確認
                         </button>
                     </div>
                 </div>
             </div>
+    </script>
+
+    <!-- 要轉 text/x-template  -->
+    <!-- 刪除產品 modal 元件 -->
+    <script type="text/x-template" id="templateForDeleteModal">
+
+        <!-- 這邊帶入 v-for?? -->
+        <div class="modal-dialog">
+            <div class="modal-content border-0">
+                <div class="modal-header bg-danger text-white">
+                    <h5 id="delProductModalLabel" class="modal-title">
+                        <span>刪除產品</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    是否刪除
+                    <strong class="text-danger">{{tempProduct.title}}</strong> 商品(刪除後將無法恢復)。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-danger" @click="deleteProduct">
+                        確認刪除
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </script>
 
     <!-- AJAX -->

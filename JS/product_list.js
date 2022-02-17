@@ -47,11 +47,11 @@ const app = createApp({
         const api_url = `${url}/api/user/check`;
         axios.post(api_url)
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             this.getProductData()
         })
         .catch(error => {
-            console.log(error);
+            // console.log(error);
         })    
         },
 
@@ -60,7 +60,7 @@ const app = createApp({
         getProductData(page = 1){
             axios.get(`${url}/api/${api_path}/admin/products?page=${page}`)
             .then(res => {
-                console.log(res.data.pagination);
+                // console.log(res.data.pagination);
                 this.productData = res.data.products;
                 this.pagination = res.data.pagination;
             })
@@ -100,18 +100,6 @@ const app = createApp({
             
         },
 
-        // 刪除商品
-        deleteProduct(){
-            axios.delete(`${url}/api/${api_path}/admin/product/${this.tempProduct.id}`)
-            .then(res => {
-                console.log(res.data);
-                deleteProductModal.hide();
-                this.getProductData();
-            })
-            .catch(err => {
-                console.dir(err);
-            })
-        }
     },
 
     mounted() {
@@ -131,10 +119,12 @@ const app = createApp({
     
 });
 
-// 全域元件 
+// 全域元件 : 新增、編輯產品 modal
 app.component('productModalComponent', {
-    props: ['tempProduct'],
+
     template: '#templateForProductModal',
+    props: ['tempProduct', 'isNew'],
+
     methods: {
         // 新增及編輯產品 API
         updateProduct(){
@@ -142,7 +132,7 @@ app.component('productModalComponent', {
             if(!this.isNew){
                 axios.put(`${url}/api/${api_path}/admin/product/${this.tempProduct.id}`, {data: this.tempProduct})
                 .then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     productModal.hide();
                     // this.getProductData();
                     this.$emit('get-product-data');
@@ -153,7 +143,7 @@ app.component('productModalComponent', {
             }else{
                 axios.post(`${url}/api/${api_path}/admin/product`, {data: this.tempProduct})
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 productModal.hide();
                 // this.getProductData();
                 this.$emit('get-product-data');
@@ -163,6 +153,32 @@ app.component('productModalComponent', {
             })
             }
         },
+    }
+})
+
+// 全域元件 : 刪除產品 modal
+
+app.component('delete-product-modal-component', {
+
+    template: '#templateForDeleteModal',
+    props: ['tempProduct'],
+
+    methods: {
+
+        // 刪除商品
+        deleteProduct(){
+            axios.delete(`${url}/api/${api_path}/admin/product/${this.tempProduct.id}`)
+            .then(res => {
+                // console.log(res.data);
+                deleteProductModal.hide();
+                // this.getProductData();
+                this.$emit('get-product-data')
+            })
+            .catch(err => {
+                console.dir(err);
+            })
+        }
+
     }
 })
 
